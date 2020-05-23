@@ -71,12 +71,14 @@ const Main: React.FC = () => {
   useEffect(() => setupEvents(), [setupEvents]);
 
   useEffect(() => {
-    obsService.connect({}).then(() => {
-      console.log("OBS connected!");
-      dispatch({ type: "status", payload: "Connected" });
-      sceneLoad();
-    });
-  }, [dispatch, sceneLoad]);
+    obsService
+      .connect({ address: obsState.address, password: obsState.password })
+      .then(() => {
+        console.log("OBS connected!");
+        dispatch({ type: "status", payload: "Connected" });
+        sceneLoad();
+      });
+  }, [dispatch, obsState, sceneLoad]);
 
   const sceneSwitch = (scene?: string) => {
     if (!scene) return;
@@ -108,7 +110,7 @@ const Main: React.FC = () => {
       toogleSetup={toogleSetup}
     />
   ) : (
-    <div className="container">
+    <div className="container" unselectable="on">
       <Header status={obsState.status} toogleSetup={toogleSetup} />
       <div className="action-line">
         {scenesToRender?.map(
