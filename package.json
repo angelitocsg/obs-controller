@@ -1,6 +1,11 @@
 {
   "name": "obs-controller",
   "version": "0.1.0",
+  "author": {
+    "name": "Angelito Casagrande",
+    "url": "https://github.com/angelitocsg"
+  },
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
