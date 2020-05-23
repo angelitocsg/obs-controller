@@ -3,8 +3,7 @@
   "short_name": "OBS Controller",
   "theme_color": "#000000",
   "background_color": "#00001e",
-  "display": "minimal-ui",
-  "orientation": "landscape",
+  "display": "fullscreen",
   "Scope": "/",
   "start_url": "/",
   "icons": [
