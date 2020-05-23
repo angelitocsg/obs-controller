@@ -1,11 +1,15 @@
 import OBSWebSocket from "obs-websocket-js";
 
-import { IScene, IObsConnect } from "../interfaces/IObsController";
+import { IObsConnect, IScene } from "../interfaces/IObsController";
 
 let obs = new OBSWebSocket();
 
-const connect = ({ address = "localhost:4444", password = "" }: IObsConnect) =>
-  obs.connect({ address, password });
+const connect = ({
+  address = "localhost:4444",
+  password = "",
+}: IObsConnect) => {
+  return obs.connect({ address, password });
+};
 
 const getScenes = () => obs.send("GetSceneList");
 
@@ -13,11 +17,9 @@ const getPreview = () => obs.send("GetPreviewScene");
 
 const getThumbs = async (scenes: IScene[]) => {
   const sceneWithThumbs: IScene[] = [];
-
   for (let i = 0; i < scenes.length; i++) {
     sceneWithThumbs.push(await getThumb(scenes[i]));
   }
-
   return sceneWithThumbs;
 };
 
@@ -28,7 +30,7 @@ const getThumb = async (scene: IScene) => {
     .send("TakeSourceScreenshot", {
       embedPictureFormat: "png",
       sourceName: scene.name,
-      width: 200,
+      width: scene.thumbnailWidth && scene.thumbnailWidth * 2,
     })
     .then(
       (data): IScene => ({

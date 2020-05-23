@@ -1,4 +1,5 @@
 import "./assets/button.scss";
+import "./assets/form.scss";
 import "./assets/style.scss";
 
 import React from "react";

@@ -1,7 +1,13 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { useObsDispatch, useObsState } from "../appContext";
-import { IScene, SceneStatus } from "../interfaces/IObsController";
+import { Header } from "../components/Header";
+import { Setup } from "../components/Setup";
+import {
+  IObsController,
+  IScene,
+  SceneStatus,
+} from "../interfaces/IObsController";
 import { obsService } from "../services/websocketService";
 
 const Main: React.FC = () => {
@@ -9,19 +15,19 @@ const Main: React.FC = () => {
 
   const hasObsEvents = useRef(false);
   const dispatch = useObsDispatch();
-  const { status } = useObsState();
-
-  useEffect(() => {
-    console.log("oi");
-  }, []);
+  const obsState = useObsState();
 
   const sceneLoad = useCallback(() => {
     obsService.getScenes().then(({ scenes, ...rest }) => {
       const current = rest["current-scene"];
       const scenesList = scenes.map<IScene>((scene) =>
         scene.name === current
-          ? { name: scene.name, status: SceneStatus.Program }
-          : { name: scene.name }
+          ? {
+              name: scene.name,
+              thumbnailWidth: obsState.buttonWidth,
+              status: SceneStatus.Program,
+            }
+          : { name: scene.name, thumbnailWidth: obsState.buttonWidth }
       );
 
       dispatch({
@@ -52,7 +58,7 @@ const Main: React.FC = () => {
         });
       });
     });
-  }, [dispatch]);
+  }, [dispatch, obsState.buttonWidth]);
 
   const setupEvents = useCallback(() => {
     if (hasObsEvents.current) return;
@@ -77,13 +83,37 @@ const Main: React.FC = () => {
     obsService.setCurrentScene(scene);
   };
 
-  return (
+  const [onSetup, setOnSetup] = useState(false);
+  const [setupData, setSetupData] = useState<IObsController>({ ...obsState });
+  const toogleSetup = () => {
+    if (onSetup) {
+      dispatch({ type: "setup", payload: setupData });
+    }
+    setOnSetup(!onSetup);
+  };
+  const handleSetupChange = (e: any) => {
+    const field = e.target.name;
+    let value = e.target.value;
+    if (field === "buttons") value = parseInt(value);
+    if (field === "buttonWidth") value = parseInt(value);
+    setSetupData({ ...setupData, [field]: value });
+  };
+  useEffect(() => console.log(setupData), [setupData]);
+
+  return onSetup ? (
+    <Setup
+      status={obsState.status}
+      setupData={setupData}
+      handleSetupChange={handleSetupChange}
+      toogleSetup={toogleSetup}
+    />
+  ) : (
     <div className="container">
-      <div className="status-line">Status: {status}</div>
+      <Header status={obsState.status} toogleSetup={toogleSetup} />
       <div className="action-line">
         {scenesToRender?.map(
           (scene, index) =>
-            index < 8 && (
+            index < (obsState.buttons || 8) && (
               <div
                 key={index}
                 className={`action-btn ${
@@ -93,6 +123,7 @@ const Main: React.FC = () => {
                     ? "preview"
                     : ""
                 }`}
+                style={{ minWidth: obsState.buttonWidth }}
                 onClick={() => sceneSwitch(scene?.name)}
               >
                 <div className="action-name">{scene.name}</div>

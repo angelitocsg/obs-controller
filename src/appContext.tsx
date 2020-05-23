@@ -1,4 +1,5 @@
 import React from "react";
+
 import { IObsController } from "./interfaces/IObsController";
 
 const ObsControllerStateContext = React.createContext<IObsController>({});
@@ -9,15 +10,32 @@ export interface IAction {
   payload?: any;
 }
 
-const initialState: IObsController = {
+const defaultState: IObsController = {
   address: "localhost:4444",
+  buttons: 8,
+  buttonWidth: 100,
 };
+
+const loadState = (): IObsController => {
+  var stateLocal = localStorage.getItem("setup");
+  if (!stateLocal) return defaultState;
+  return JSON.parse(stateLocal);
+};
+
+const initialState: IObsController = loadState();
 
 const obsControllerReducer = (
   state: IObsController,
   action: IAction
 ): IObsController => {
   switch (action.type) {
+    case "setup": {
+      saveState({ ...action.payload });
+      return {
+        ...state,
+        ...action.payload,
+      };
+    }
     case "status": {
       return { ...state, status: action.payload };
     }
@@ -28,6 +46,10 @@ const obsControllerReducer = (
       throw new Error(`Unhandled action type: ${action.type}`);
     }
   }
+};
+
+const saveState = (setup: IObsController) => {
+  localStorage.setItem("setup", JSON.stringify(setup));
 };
 
 const ObsProvider = ({ children }: any) => {

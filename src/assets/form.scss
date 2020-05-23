@@ -1,0 +1,32 @@
+#setupArea {
+  padding: 15px;
+  flex-direction: column;
+}
+
+#setupArea .formGroup {
+  flex: 1;
+  padding-bottom: 5px;
+}
+
+#setupArea .formGroup label {
+  padding: 5px 15px;
+  color: #fff;
+  display: block;
+  width: 100px;
+}
+
+#setupArea .formGroup input[type="text"],
+#setupArea .formGroup input[type="password"] {
+  flex: 1;
+}
+
+#setupArea .formGroup input[type="radio"] {
+  margin-right: 10px;
+}
+
+#setupArea .formGroup .optButton {
+  align-items: center;
+  color: #fff;
+  padding: 5px 0;
+  padding-right: 15px;
+}

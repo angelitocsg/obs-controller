@@ -12,6 +12,7 @@ export enum ObsStatus {
 export interface IScene {
   name?: string;
   thumbnail?: string;
+  thumbnailWidth?: number;
   status?: SceneStatus;
 }
 
@@ -21,6 +22,8 @@ export interface IObsConnect {
 }
 
 export interface IObsController extends IObsConnect {
+  buttons?: number;
+  buttonWidth?: number;
   status?: ObsStatus;
   scenes?: IScene[];
 }
