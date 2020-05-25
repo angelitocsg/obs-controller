@@ -35,10 +35,11 @@ div {
 }
 
 .status-line {
+  align-items: center;
   background: #000;
   color: #f0f0f0;
   font-size: 8pt;
-  padding: 10px 15px 10px 15px;
+  padding: 5px 15px 5px 15px;
 }
 
 .action-line {
@@ -57,5 +58,33 @@ div {
   border: 1px solid #fff;
   font-weight: bold;
   font-size: 10px;
-  padding: 2px 15px;
+  padding: 5px 15px;
+}
+
+.error-message {
+  flex-direction: column;
+}
+
+.error-message div {
+  background: red;
+  color: white;
+  display: block;
+  padding: 10px 15px 10px 10px;
+  margin-bottom: 5px;
+}
+
+.error-message button {
+  padding: 15px 5px;
+}
+
+.info-message {
+  flex-direction: column;
+}
+
+.info-message div {
+  background: #1d1deb;
+  color: white;
+  display: block;
+  padding: 10px 15px 10px 10px;
+  margin-bottom: 5px;
 }

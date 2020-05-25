@@ -12,10 +12,58 @@ import { obsService } from "../services/websocketService";
 
 const Main: React.FC = () => {
   const [scenesToRender, setScenes] = useState<IScene[]>();
+  const [errors, setErrors] = useState<string[]>([]);
 
   const hasObsEvents = useRef(false);
   const dispatch = useObsDispatch();
   const obsState = useObsState();
+  const { address, port, password } = useObsState();
+
+  /* * * * * * * * * * * * * * * * * * * * * * * *
+   * PREVIEW
+   * * * * * * * * * * * * * * * * * * * * * * * */
+
+  const getCurrentPreview = useCallback(
+    (swp: IScene[]) => {
+      obsService.getPreview().then((data) => {
+        const scenesWithPreview = swp.map((scene) =>
+          scene.name === data.name
+            ? { ...scene, status: SceneStatus.Preview }
+            : scene
+        );
+        dispatch({
+          type: "scenes",
+          payload: scenesWithPreview,
+        });
+        setScenes(scenesWithPreview);
+      });
+    },
+    [dispatch]
+  );
+
+  /* * * * * * * * * * * * * * * * * * * * * * * *
+   * THUMBNAILS
+   * * * * * * * * * * * * * * * * * * * * * * * */
+
+  const loadThumbnails = useCallback(
+    (scenesList: IScene[]) => {
+      obsService.getThumbs(scenesList).then((swp) => {
+        dispatch({
+          type: "scenes",
+          payload: swp,
+        });
+
+        console.log("Thumbs loaded");
+
+        getCurrentPreview(swp);
+      });
+    },
+    [dispatch, getCurrentPreview]
+  );
+
+  /* * * * * * * * * * * * * * * * * * * * * * * *
+   * SCENES
+   * * * * * * * * * * * * * * * * * * * * * * * */
 
   const sceneLoad = useCallback(() => {
     obsService.getScenes().then(({ scenes, ...rest }) => {
@@ -36,29 +84,13 @@ const Main: React.FC = () => {
       });
       console.log("Scenes loaded");
 
-      obsService.getThumbs(scenesList).then((swp) => {
-        dispatch({
-          type: "scenes",
-          payload: swp,
-        });
-
-        console.log("Thumbs loaded");
-
-        obsService.getPreview().then((data) => {
-          const scenesWithPreview = swp.map((scene) =>
-            scene.name === data.name
-              ? { ...scene, status: SceneStatus.Preview }
-              : scene
-          );
-          dispatch({
-            type: "scenes",
-            payload: scenesWithPreview,
-          });
-          setScenes(scenesWithPreview);
-        });
-      });
+      loadThumbnails(scenesList);
     });
-  }, [dispatch, obsState.buttonWidth]);
+  }, [dispatch, loadThumbnails, obsState.buttonWidth]);
+
+  /* * * * * * * * * * * * * * * * * * * * * * * *
+   * EVENTS
+   * * * * * * * * * * * * * * * * * * * * * * * */
 
   const setupEvents = useCallback(() => {
     if (hasObsEvents.current) return;
@@ -70,20 +102,37 @@ const Main: React.FC = () => {
   }, [sceneLoad]);
   useEffect(() => setupEvents(), [setupEvents]);
 
+  /* * * * * * * * * * * * * * * * * * * * * * * *
+   * CONNECTION
+   * * * * * * * * * * * * * * * * * * * * * * * */
+
   useEffect(() => {
     obsService
-      .connect({ address: obsState.address, password: obsState.password })
+      .connect({ address: address, port: port, password: password })
       .then(() => {
         console.log("OBS connected!");
         dispatch({ type: "status", payload: "Connected" });
         sceneLoad();
+      })
+      .catch((err) => {
+        console.log(err);
+
+        setErrors(
+          [...errors, `${err.error} Address: ws://${address}:${port}`].filter(
+            (v, i, a) => a.indexOf(v) === i
+          )
+        );
       });
-  }, [dispatch, obsState, sceneLoad]);
+  }, [address, dispatch, errors, password, port, sceneLoad]);
 
   const sceneSwitch = (scene?: string) => {
     if (!scene) return;
     obsService.setCurrentScene(scene);
   };
+
+  /* * * * * * * * * * * * * * * * * * * * * * * *
+   * SETUP
+   * * * * * * * * * * * * * * * * * * * * * * * */
 
   const [onSetup, setOnSetup] = useState(false);
   const [setupData, setSetupData] = useState<IObsController>({ ...obsState });
@@ -96,11 +145,11 @@ const Main: React.FC = () => {
   const handleSetupChange = (e: any) => {
     const field = e.target.name;
     let value = e.target.value;
+    if (field === "port") value = parseInt(value);
     if (field === "buttons") value = parseInt(value);
     if (field === "buttonWidth") value = parseInt(value);
     setSetupData({ ...setupData, [field]: value });
   };
-  useEffect(() => console.log(setupData), [setupData]);
 
   return onSetup ? (
     <Setup
@@ -112,6 +161,24 @@ const Main: React.FC = () => {
   ) : (
     <div className="container" unselectable="on">
       <Header status={obsState.status} toogleSetup={toogleSetup} />
+
+      {!!errors.length && (
+        <div className="error-message">
+          {errors.map((e, index) => (
+            <div key={index}>{e}</div>
+          ))}
+          <button type="button" onClick={() => window.location.reload()}>
+            Clique aqui para ATUALIZAR
+          </button>
+        </div>
+      )}
+
+      {!errors.length && !scenesToRender?.length && (
+        <div className="info-message">
+          <div>CARREGANDO...</div>
+        </div>
+      )}
+
       <div className="action-line">
         {scenesToRender?.map(
           (scene, index) =>
