@@ -18,6 +18,7 @@ export interface IScene {
 
 export interface IObsConnect {
   address?: string;
+  port?: number;
   password?: string;
 }
 

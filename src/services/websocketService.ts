@@ -5,10 +5,11 @@ import { IObsConnect, IScene } from "../interfaces/IObsController";
 let obs = new OBSWebSocket();
 
 const connect = ({
-  address = "localhost:4444",
+  address = "localhost",
+  port = 4444,
   password = "",
 }: IObsConnect) => {
-  return obs.connect({ address, password });
+  return obs.connect({ address: `${address}:${port}`, password });
 };
 
 const getScenes = () => obs.send("GetSceneList");

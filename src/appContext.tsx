@@ -11,7 +11,8 @@ export interface IAction {
 }
 
 const defaultState: IObsController = {
-  address: "localhost:4444",
+  address: "localhost",
+  port: 4444,
   buttons: 8,
   buttonWidth: 100,
 };

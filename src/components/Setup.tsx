@@ -31,6 +31,15 @@ const Setup: React.FC<IProps> = ({
             />
           </div>
           <div className="formGroup">
+            <label>Port</label>
+            <input
+              name="port"
+              value={setupData.port}
+              onChange={handleSetupChange}
+              type="text"
+            />
+          </div>
+          <div className="formGroup">
             <label>Password</label>
             <input
               name="password"
