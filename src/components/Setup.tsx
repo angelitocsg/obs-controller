@@ -60,77 +60,105 @@ const Setup: React.FC<IProps> = ({
               autoComplete="none"
             />
           </div>
+
           <div className="formGroup">
             <label>Buttons</label>
-            <div className="optButton">
-              <input
-                type="radio"
-                value={2}
-                onChange={handleSetupChange}
-                name="buttons"
-                checked={setupData.buttons === 2}
-              />
-              2
+
+            <div style={{ display: "block" }}>
+              <div className="optButton">
+                <input
+                  type="radio"
+                  value={2}
+                  onChange={handleSetupChange}
+                  name="buttons"
+                  checked={setupData.buttons === 2}
+                />
+                2
+              </div>
+              <div className="optButton">
+                <input
+                  type="radio"
+                  value={4}
+                  onChange={handleSetupChange}
+                  name="buttons"
+                  checked={setupData.buttons === 4}
+                />
+                4
+              </div>
+              <div className="optButton">
+                <input
+                  type="radio"
+                  value={6}
+                  onChange={handleSetupChange}
+                  name="buttons"
+                  checked={setupData.buttons === 6}
+                />
+                6
+              </div>
             </div>
-            <div className="optButton">
-              <input
-                type="radio"
-                value={4}
-                onChange={handleSetupChange}
-                name="buttons"
-                checked={setupData.buttons === 4}
-              />
-              4
+            <div style={{ display: "block" }}>
+              <div className="optButton">
+                <input
+                  type="radio"
+                  value={8}
+                  onChange={handleSetupChange}
+                  name="buttons"
+                  checked={setupData.buttons === 8}
+                />
+                8
+              </div>
+              <div className="optButton">
+                <input
+                  type="radio"
+                  value={10}
+                  onChange={handleSetupChange}
+                  name="buttons"
+                  checked={setupData.buttons === 10}
+                />
+                10
+              </div>
+              <div className="optButton">
+                <input
+                  type="radio"
+                  value={12}
+                  onChange={handleSetupChange}
+                  name="buttons"
+                  checked={setupData.buttons === 12}
+                />
+                12
+              </div>
             </div>
-            <div className="optButton">
-              <input
-                type="radio"
-                value={6}
-                onChange={handleSetupChange}
-                name="buttons"
-                checked={setupData.buttons === 6}
-              />
-              6
-            </div>
-            <div className="optButton">
-              <input
-                type="radio"
-                value={8}
-                onChange={handleSetupChange}
-                name="buttons"
-                checked={setupData.buttons === 8}
-              />
-              8
-            </div>
-            <div className="optButton">
-              <input
-                type="radio"
-                value={10}
-                onChange={handleSetupChange}
-                name="buttons"
-                checked={setupData.buttons === 10}
-              />
-              10
-            </div>
-            <div className="optButton">
-              <input
-                type="radio"
-                value={12}
-                onChange={handleSetupChange}
-                name="buttons"
-                checked={setupData.buttons === 12}
-              />
-              12
-            </div>
-            <div className="optButton">
-              <input
-                type="radio"
-                value={14}
-                onChange={handleSetupChange}
-                name="buttons"
-                checked={setupData.buttons === 14}
-              />
-              14
+            <div style={{ display: "block" }}>
+              <div className="optButton">
+                <input
+                  type="radio"
+                  value={14}
+                  onChange={handleSetupChange}
+                  name="buttons"
+                  checked={setupData.buttons === 14}
+                />
+                14
+              </div>
+              <div className="optButton">
+                <input
+                  type="radio"
+                  value={16}
+                  onChange={handleSetupChange}
+                  name="buttons"
+                  checked={setupData.buttons === 16}
+                />
+                16
+              </div>
+              <div className="optButton">
+                <input
+                  type="radio"
+                  value={18}
+                  onChange={handleSetupChange}
+                  name="buttons"
+                  checked={setupData.buttons === 18}
+                />
+                18
+              </div>
             </div>
           </div>
         </div>

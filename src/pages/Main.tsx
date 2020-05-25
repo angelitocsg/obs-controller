@@ -167,7 +167,11 @@ const Main: React.FC = () => {
           {errors.map((e, index) => (
             <div key={index}>{e}</div>
           ))}
-          <button type="button" onClick={() => window.location.reload()}>
+          <button
+            className="btn-refresh"
+            type="button"
+            onClick={() => window.location.reload()}
+          >
             Clique aqui para ATUALIZAR
           </button>
         </div>
@@ -176,6 +180,13 @@ const Main: React.FC = () => {
       {!errors.length && !scenesToRender?.length && (
         <div className="info-message">
           <div>CARREGANDO...</div>
+          <button
+            className="btn-refresh"
+            type="button"
+            onClick={() => window.location.reload()}
+          >
+            Clique aqui para ATUALIZAR
+          </button>
         </div>
       )}
 
